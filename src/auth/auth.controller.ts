@@ -23,7 +23,10 @@ import { LoginDto } from './dtos/login.dto';
 import { AuthGuard } from './auth.guard';
 import { UpdateDto } from './dtos/update.dto';
 import { PasswordDto } from './dtos/password.dto';
+
+
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(
     private readonly userService: UserService,
@@ -74,7 +77,7 @@ export class AuthController {
     return { message: 'success' };
   }
   // to execlude the password when we serlize the use data to front-end. Note that we installed reflect-metadata & class-transformer
-  @UseInterceptors(ClassSerializerInterceptor)
+
   @UseGuards(AuthGuard)
   @Get('admin/user')
   async user(@Req() request: Request) {
@@ -88,7 +91,6 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
   @Put('admin/users/info')
   async updateInfo(@Body() updateDto: UpdateDto, @Req() request: Request) {
     // expect to recive new first name and/or new last name and/or new email
